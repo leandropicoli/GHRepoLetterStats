@@ -15,7 +15,7 @@ public class RepoLetterStatsService : IRepoLetterStatsService
     {
         var extensions = new string[2] { "js", "ts" };
 
-        var result = (await _gitHubApiClient.GetRepoFileNamesByExtensionAsync(extensions)).ToList();
+        var result = (await _gitHubApiClient.GetRepoFilePathByExtensionAsync(extensions)).ToList();
 
         var response = new Dictionary<char, int>();
 

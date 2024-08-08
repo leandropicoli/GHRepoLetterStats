@@ -50,7 +50,7 @@ public class GitHubApiClientTests
     {
         //Arrange
         //Act
-        var result = await _sut.GetRepoFileNamesAsync();
+        var result = await _sut.GetRepoFilePathAsync();
 
         //Assert
         Assert.Equal(4, result.Count());
@@ -60,13 +60,26 @@ public class GitHubApiClientTests
         Assert.Contains("readme.md", result);
     }
 
+    [Fact]
+    public async Task GetRepoJavascriptAndTypescriptFilePathAsync_OnlyReturnJavascriptAndTypeScriptFiles()
+    {
+        //Arrange
+        //Act
+        var result = await _sut.GetRepoJavascriptAndTypescriptFilePathAsync();
+
+        //Assert
+        Assert.Equal(2, result.Count());
+        Assert.Contains("file.js", result);
+        Assert.Contains("file.ts", result);
+    }
+
     [Theory]
     [MemberData(nameof(GetRepoFileNamesByExtensionAsyncTestData))]
     public async Task GetRepoFileNamesByExtensionAsync_ListOfExtensionsIsGiven_ReturnsOnlyFilesWithThatExtension(string[] given, string[] expected)
     {
         //Arrange
         //Act
-        var result = await _sut.GetRepoFileNamesByExtensionAsync(given);
+        var result = await _sut.GetRepoFilePathByExtensionAsync(given);
 
         //Assert
         Assert.Equal(expected, result);

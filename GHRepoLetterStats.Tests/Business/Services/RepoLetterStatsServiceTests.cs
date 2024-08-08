@@ -27,7 +27,7 @@ public class RepoLetterStatsServiceTests
         };
 
         _gitHubApiClientMock
-            .Setup(x => x.GetRepoFileNamesByExtensionAsync(It.IsAny<string[]>()))
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
             .ReturnsAsync(clientResponse);
 
         //Act
@@ -60,7 +60,7 @@ public class RepoLetterStatsServiceTests
         };
 
         _gitHubApiClientMock
-            .Setup(x => x.GetRepoFileNamesByExtensionAsync(It.IsAny<string[]>()))
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
             .ReturnsAsync(clientResponse);
 
         //Act
