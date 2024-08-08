@@ -1,0 +1,6 @@
+@GHRepoLetterStats.Api_HostAddress = http://localhost:5007
+
+GET {{GHRepoLetterStats.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

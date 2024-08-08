@@ -1,0 +1,46 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.Api", "GHRepoLetterStats.Api\GHRepoLetterStats.Api.csproj", "{0862604B-7E5E-438A-905B-124C9E6AED62}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.Business", "GHRepoLetterStats.Business\GHRepoLetterStats.Business.csproj", "{D194B962-75A8-4168-9964-A2D4853E3311}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.ConsoleApp", "GHRepoLetterStats.ConsoleApp\GHRepoLetterStats.ConsoleApp.csproj", "{848E4711-4C3C-49A0-ABAE-219CB8135B74}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.DataAccess", "GHRepoLetterStats.DataAccess\GHRepoLetterStats.DataAccess.csproj", "{2C14536B-E045-4AA7-8352-FCAE831A824A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.Tests", "GHRepoLetterStats.Tests\GHRepoLetterStats.Tests.csproj", "{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0862604B-7E5E-438A-905B-124C9E6AED62}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0862604B-7E5E-438A-905B-124C9E6AED62}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0862604B-7E5E-438A-905B-124C9E6AED62}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0862604B-7E5E-438A-905B-124C9E6AED62}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D194B962-75A8-4168-9964-A2D4853E3311}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D194B962-75A8-4168-9964-A2D4853E3311}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D194B962-75A8-4168-9964-A2D4853E3311}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D194B962-75A8-4168-9964-A2D4853E3311}.Release|Any CPU.Build.0 = Release|Any CPU
+		{848E4711-4C3C-49A0-ABAE-219CB8135B74}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{848E4711-4C3C-49A0-ABAE-219CB8135B74}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{848E4711-4C3C-49A0-ABAE-219CB8135B74}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{848E4711-4C3C-49A0-ABAE-219CB8135B74}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2C14536B-E045-4AA7-8352-FCAE831A824A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2C14536B-E045-4AA7-8352-FCAE831A824A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2C14536B-E045-4AA7-8352-FCAE831A824A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2C14536B-E045-4AA7-8352-FCAE831A824A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
