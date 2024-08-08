@@ -15,6 +15,31 @@ public class RepoLetterStatsServiceTests
     }
 
     [Fact]
+    public async Task GetLetterFrequenciesAsync_ReturnsLetterStats()
+    {
+        //Arrange
+        var clientResponse = new List<string>
+        {
+            "abccaa",
+            "abbbccd",
+            "abbccc"
+        };
+
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFileNamesByExtensionAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(clientResponse);
+
+        //Act
+        var result = await _sut.GetLetterFrequenciesAsync();
+
+        //Assert
+        Assert.Equal(5, result['a']);
+        Assert.Equal(6, result['b']);
+        Assert.Equal(7, result['c']);
+        Assert.Equal(1, result['d']);
+    }
+
+    [Fact]
     public async Task GetLetterFrequenciesAsync_ReturnsUndescOrderedDictionary()
     {
         //Arrange
@@ -40,11 +65,7 @@ public class RepoLetterStatsServiceTests
         //Act
         var result = await _sut.GetLetterFrequenciesAsync();
 
-        Assert.Equal(5, result['a']);
-        Assert.Equal(6, result['b']);
-        Assert.Equal(7, result['c']);
-        Assert.Equal(1, result['d']);
+        //Assert
         Assert.Equal(expectedOrder, result);
-
     }
 }
