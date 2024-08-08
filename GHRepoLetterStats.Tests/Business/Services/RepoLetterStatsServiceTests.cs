@@ -1,18 +1,23 @@
 ﻿using GHRepoLetterStats.Business.Services.Impl;
+using GHRepoLetterStats.Common.Configuration;
 using GHRepoLetterStats.DataAccess.Clients.Interfaces;
+using Microsoft.Extensions.Options;
 using Moq;
-using Xunit;
 
 namespace GHRepoLetterStats.Tests.Business.Services;
 public class RepoLetterStatsServiceTests
 {
     private readonly RepoLetterStatsService _sut;
     private Mock<IGitHubApiClient> _gitHubApiClientMock;
+    private Mock<IOptions<Configuration>> _configurationMock;
 
     public RepoLetterStatsServiceTests()
     {
         _gitHubApiClientMock = new Mock<IGitHubApiClient>(MockBehavior.Strict);
-        _sut = new RepoLetterStatsService(_gitHubApiClientMock.Object);
+        _configurationMock = new Mock<IOptions<Configuration>>(MockBehavior.Strict);
+        _configurationMock.Setup(x => x.Value).Returns(new Configuration());
+
+        _sut = new RepoLetterStatsService(_gitHubApiClientMock.Object, _configurationMock.Object);
     }
 
     [Fact]

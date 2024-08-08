@@ -1,15 +1,19 @@
 ﻿using GHRepoLetterStats.Business.Services.Interfaces;
 using GHRepoLetterStats.DataAccess.Clients.Interfaces;
 using GHRepoLetterStats.Common.ExtensionMethods;
+using Microsoft.Extensions.Options;
+using GHRepoLetterStats.Common.Configuration;
 
 namespace GHRepoLetterStats.Business.Services.Impl;
 public class RepoLetterStatsService : IRepoLetterStatsService
 {
     private readonly IGitHubApiClient _gitHubApiClient;
+    private readonly Configuration _config;
 
-    public RepoLetterStatsService(IGitHubApiClient gitHubApiClient)
+    public RepoLetterStatsService(IGitHubApiClient gitHubApiClient, IOptions<Configuration> config)
     {
         _gitHubApiClient = gitHubApiClient;
+        _config = config.Value;
     }
 
     public async Task<Dictionary<char, int>> GetLetterFrequenciesAsync()
@@ -27,7 +31,12 @@ public class RepoLetterStatsService : IRepoLetterStatsService
         {
             var fileName = Path.GetFileNameWithoutExtension(item);
             fileName = fileName.ToLower();
-            fileName = fileName.Replace(".spec", "");
+
+            foreach (var subtype in _config.SubExtensionsToIgnore)
+            {
+                fileName = fileName.Replace(subtype, "");
+            }
+
             fileName = fileName.RemoveSpecialCharacters();
 
             foreach (var letter in fileName)
