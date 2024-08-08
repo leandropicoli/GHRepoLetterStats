@@ -1,6 +1,6 @@
 ﻿using GHRepoLetterStats.DataAccess.Clients.Interfaces;
-using GHRepoLetterStats.DataAccess.ExtensionMethods;
 using GHRepoLetterStats.DataAccess.ExternalModels;
+using GHRepoLetterStats.Common.ExtensionMethods;
 using System.Text.Json;
 
 namespace GHRepoLetterStats.DataAccess.Clients.Impl;

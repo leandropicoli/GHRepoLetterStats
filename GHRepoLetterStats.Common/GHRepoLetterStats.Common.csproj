@@ -6,8 +6,4 @@
     <Nullable>enable</Nullable>
   </PropertyGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\GHRepoLetterStats.Common\GHRepoLetterStats.Common.csproj" />
-  </ItemGroup>
-
 </Project>
