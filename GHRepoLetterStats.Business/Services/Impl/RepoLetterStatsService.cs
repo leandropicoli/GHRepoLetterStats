@@ -11,8 +11,32 @@ public class RepoLetterStatsService : IRepoLetterStatsService
         _gitHubApiClient = gitHubApiClient;
     }
 
-    public Task<Dictionary<char, int>> GetLetterFrequenciesAsync()
+    public async Task<Dictionary<char, int>> GetLetterFrequenciesAsync()
     {
-        throw new NotImplementedException();
+        var extensions = new string[2] { "js", "ts" };
+
+        var result = (await _gitHubApiClient.GetRepoFileNamesByExtensionAsync(extensions)).ToList();
+
+        var response = new Dictionary<char, int>();
+
+        if (result.Count == 0) 
+            return response;
+
+        foreach (var item in result)
+        {
+            foreach (var letter in item)
+            {
+                if (response.ContainsKey(letter))
+                {
+                    response[letter] += 1;
+                }
+                else
+                {
+                    response[letter] = 1;
+                }
+            }
+        }
+
+        return response.OrderByDescending(x => x.Value).ToDictionary();
     }
 }

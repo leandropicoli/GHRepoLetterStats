@@ -1,6 +1,7 @@
 ﻿using GHRepoLetterStats.Business.Services.Impl;
 using GHRepoLetterStats.DataAccess.Clients.Interfaces;
 using Moq;
+using Xunit;
 
 namespace GHRepoLetterStats.Tests.Business.Services;
 public class RepoLetterStatsServiceTests
@@ -67,5 +68,9 @@ public class RepoLetterStatsServiceTests
 
         //Assert
         Assert.Equal(expectedOrder, result);
+        Assert.Equal('c', result.ElementAt(0).Key);
+        Assert.Equal('b', result.ElementAt(1).Key);
+        Assert.Equal('a', result.ElementAt(2).Key);
+        Assert.Equal('d', result.ElementAt(3).Key);
     }
 }
