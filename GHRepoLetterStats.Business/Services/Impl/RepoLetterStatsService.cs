@@ -1,5 +1,6 @@
 ﻿using GHRepoLetterStats.Business.Services.Interfaces;
 using GHRepoLetterStats.DataAccess.Clients.Interfaces;
+using System.Text.RegularExpressions;
 
 namespace GHRepoLetterStats.Business.Services.Impl;
 public class RepoLetterStatsService : IRepoLetterStatsService
@@ -24,7 +25,12 @@ public class RepoLetterStatsService : IRepoLetterStatsService
 
         foreach (var item in result)
         {
-            foreach (var letter in item)
+            var fileName = Path.GetFileNameWithoutExtension(item);
+            fileName = fileName.ToLower();
+            fileName = fileName.Replace(".spec", "");
+            fileName = RemoveSpecialCharacters(fileName);
+
+            foreach (var letter in fileName)
             {
                 if (response.ContainsKey(letter))
                 {
@@ -38,5 +44,11 @@ public class RepoLetterStatsService : IRepoLetterStatsService
         }
 
         return response.OrderByDescending(x => x.Value).ToDictionary();
+    }
+
+    //Move to a extension method in a common project
+    private string RemoveSpecialCharacters(string value)
+    {
+        return Regex.Replace(value, "[^a-zA-Z]", "");
     }
 }

@@ -73,4 +73,106 @@ public class RepoLetterStatsServiceTests
         Assert.Equal('a', result.ElementAt(2).Key);
         Assert.Equal('d', result.ElementAt(3).Key);
     }
+
+    [Fact]
+    public async Task GetLetterFrequenciesAsync_FullPath_CountOnlyFileName()
+    {
+        //Arrange
+        var clientResponse = new List<string>
+        {
+            "src/abccaa.ts",
+            "test/abbbccd.js",
+            "Services/abbccc.js"
+        };
+
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(clientResponse);
+
+        //Act
+        var result = await _sut.GetLetterFrequenciesAsync();
+
+        //Assert
+        Assert.Equal(5, result['a']);
+        Assert.Equal(6, result['b']);
+        Assert.Equal(7, result['c']);
+        Assert.Equal(1, result['d']);
+    }
+
+    [Fact]
+    public async Task GetLetterFrequenciesAsync_FullPathWithSpecFiles_CountOnlyFileName()
+    {
+        //Arrange
+        var clientResponse = new List<string>
+        {
+            "src/abccaa.spec.ts",
+            "test/abbbccd.js",
+            "Services/abbccc.js"
+        };
+
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(clientResponse);
+
+        //Act
+        var result = await _sut.GetLetterFrequenciesAsync();
+
+        //Assert
+        Assert.Equal(5, result['a']);
+        Assert.Equal(6, result['b']);
+        Assert.Equal(7, result['c']);
+        Assert.Equal(1, result['d']);
+    }
+
+    [Fact]
+    public async Task GetLetterFrequenciesAsync_NamesWithSpecialCharacters_CountOnlyLetters()
+    {
+        //Arrange
+        var clientResponse = new List<string>
+        {
+            "ab-cc-aa",
+            "abbb-ccd",
+            "ab_bccc"
+        };
+
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(clientResponse);
+
+        //Act
+        var result = await _sut.GetLetterFrequenciesAsync();
+
+        //Assert
+        Assert.Equal(5, result['a']);
+        Assert.Equal(6, result['b']);
+        Assert.Equal(7, result['c']);
+        Assert.Equal(1, result['d']);
+        Assert.False(result.ContainsKey('-'));
+        Assert.False(result.ContainsKey('_'));
+    }
+
+    [Fact]
+    public async Task GetLetterFrequenciesAsync_LowerCaseAndUpperCaseLetters_IgnoreCase()
+    {
+        //Arrange
+        var clientResponse = new List<string>
+        {
+            "abccaA",
+            "abbBccd",
+            "abbCcc"
+        };
+
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
+            .ReturnsAsync(clientResponse);
+
+        //Act
+        var result = await _sut.GetLetterFrequenciesAsync();
+
+        //Assert
+        Assert.Equal(5, result['a']);
+        Assert.Equal(6, result['b']);
+        Assert.Equal(7, result['c']);
+        Assert.Equal(1, result['d']);
+    }
 }
