@@ -1,11 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace GHRepoLetterStats.Common.Configuration;
+﻿namespace GHRepoLetterStats.Common.Configuration;
 public class Configuration
 {
     public string[] SubExtensionsToIgnore { get; set; } = new string[] { ".spec" };
+    public GitHubOptions GitHubOptions { get; set; } = new();
+}
+
+public class GitHubOptions
+{
+    public string GitHubApiUrl { get; set; } = "https://api.github.com";
+    public string RepoOwner { get; set; } = "lodash";
+    public string RepoName { get; set; } = "lodash";
+    public string DefaultBranch { get; set; } = "main";
+    public string? AccessToken { get; set; }
 }

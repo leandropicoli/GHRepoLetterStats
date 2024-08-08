@@ -1,5 +1,7 @@
-﻿using GHRepoLetterStats.DataAccess.Clients.Impl;
+﻿using GHRepoLetterStats.Common.Configuration;
+using GHRepoLetterStats.DataAccess.Clients.Impl;
 using GHRepoLetterStats.DataAccess.ExternalModels;
+using Microsoft.Extensions.Options;
 using Moq;
 using Moq.Protected;
 using System.Text.Json;
@@ -9,6 +11,8 @@ public class GitHubApiClientTests
 {
     private readonly GitHubApiClient _sut;
     private readonly HttpClient _httpClient;
+    private Mock<IOptions<Configuration>> _configurationMock;
+    private Configuration _configuration;
     private Mock<HttpMessageHandler> _httpMessageHandlerMock;
 
     public GitHubApiClientTests()
@@ -42,7 +46,12 @@ public class GitHubApiClientTests
             .ReturnsAsync(mockHttpResponseMessage);
 
         _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
-        _sut = new GitHubApiClient(_httpClient);
+
+        _configuration = new Configuration();
+        _configurationMock = new Mock<IOptions<Configuration>>();
+        _configurationMock.Setup(x => x.Value).Returns(_configuration);
+
+        _sut = new GitHubApiClient(_httpClient, _configurationMock.Object);
     }
 
     [Fact]
@@ -58,6 +67,49 @@ public class GitHubApiClientTests
         Assert.Contains("file.ts", result);
         Assert.Contains("file.config", result);
         Assert.Contains("readme.md", result);
+    }
+
+    [Fact]
+    public async Task GetRepoFileNamesAsync_AccessTokenIsGiven_ShouldAddAsDefaultHeader()
+    {
+        //Arrange
+        _configuration.GitHubOptions.AccessToken = "my-access-token";
+
+        HttpRequestMessage requestMessage = null;
+
+        var mockResponse = new GitRepoResponse
+        {
+            Tree = new List<GitHubTree>
+            {
+                new GitHubTree { Path = "file.js" },
+                new GitHubTree { Path = "file.ts" },
+                new GitHubTree { Path = "file.config" },
+                new GitHubTree { Path = "readme.md" },
+            }
+        };
+
+        var mockHttpResponseMessage = new HttpResponseMessage
+        {
+            StatusCode = System.Net.HttpStatusCode.OK,
+            Content = new StringContent(JsonSerializer.Serialize(mockResponse))
+        };
+
+        _httpMessageHandlerMock
+            .Protected()
+            .Setup<Task<HttpResponseMessage>>(
+                "SendAsync",
+                ItExpr.IsAny<HttpRequestMessage>(),
+                ItExpr.IsAny<CancellationToken>()
+            )
+            .Callback<HttpRequestMessage, CancellationToken>((request, _) => { requestMessage = request; })
+            .ReturnsAsync(mockHttpResponseMessage);
+
+        //Act
+        _ = await _sut.GetRepoFilePathAsync();
+
+        //Assert
+        var headers = requestMessage!.Headers;
+        Assert.Equal("my-access-token", headers.Authorization!.Parameter);
     }
 
     [Fact]

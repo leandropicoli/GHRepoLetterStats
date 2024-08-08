@@ -2,15 +2,20 @@
 using GHRepoLetterStats.DataAccess.ExternalModels;
 using GHRepoLetterStats.Common.ExtensionMethods;
 using System.Text.Json;
+using System.Net.Http.Headers;
+using GHRepoLetterStats.Common.Configuration;
+using Microsoft.Extensions.Options;
 
 namespace GHRepoLetterStats.DataAccess.Clients.Impl;
 public class GitHubApiClient : IGitHubApiClient
 {
     private readonly HttpClient _httpClient;
+    private readonly Configuration _configuration;
 
-    public GitHubApiClient(HttpClient httpClient)
+    public GitHubApiClient(HttpClient httpClient, IOptions<Configuration> options)
     {
         _httpClient = httpClient;
+        _configuration = options.Value;
     }
 
     public async Task<IEnumerable<string>> GetRepoFilePathAsync()
@@ -38,7 +43,14 @@ public class GitHubApiClient : IGitHubApiClient
 
     private async Task<GitRepoResponse> GetResponseFromEndpointAsync()
     {
-        var endpoint = "https://api.github.com/repos/lodash/lodash/git/trees/main?recursive=1";
+        var endpoint = BuildEndpointUrl();
+        _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GHRepoLetterStats", "1.0"));
+
+        if (!string.IsNullOrWhiteSpace(_configuration.GitHubOptions.AccessToken))
+        {
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", _configuration.GitHubOptions.AccessToken);
+        }
+
         var httpResponse = await _httpClient.GetAsync(endpoint);
         httpResponse.EnsureSuccessStatusCode();
 
@@ -53,5 +65,12 @@ public class GitHubApiClient : IGitHubApiClient
             throw new Exception("Failed to deserialize the response.");
 
         return result;
+    }
+
+    private string BuildEndpointUrl()
+    {
+        var githubOptions = _configuration.GitHubOptions;
+
+        return $"{githubOptions.GitHubApiUrl}/repos/{githubOptions.RepoOwner}/{githubOptions.RepoName}/git/trees/{githubOptions.DefaultBranch}?recursive=1";
     }
 }
