@@ -69,7 +69,7 @@ public class GitHubApiClientTests
         var result = await _sut.GetRepoFileNamesByExtensionAsync(given);
 
         //Assert
-        Assert.Equal(given, expected);
+        Assert.Equal(expected, result);
     }
 
     public static IEnumerable<object[]> GetRepoFileNamesByExtensionAsyncTestData
