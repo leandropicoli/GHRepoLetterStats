@@ -80,7 +80,6 @@ dotnet run
   "results": {
     "e": 787,
     "t": 574
-    ...
     // more letters and their counts
   }
 }
@@ -155,3 +154,10 @@ t - 574
 ```
 dotnet test
 ```
+
+## Benchmarks
+
+There are another implementations of **RepoLetterStatsService** on branch [benchmarks](https://github.com/leandropicoli/GHRepoLetterStats/blob/benchmarks/GHRepoLetterStats.Business/Services/Impl/RepoLetterStatsService.cs)
+
+Below are the results
+![Benchmark](/benchmark.png)
