@@ -11,8 +11,8 @@ public class GitHubApiClientTests
 {
     private readonly GitHubApiClient _sut;
     private readonly HttpClient _httpClient;
-    private Mock<IOptions<Configuration>> _configurationMock;
-    private Configuration _configuration;
+    private Mock<IOptions<GitHubOptions>> _optionsMock;
+    private GitHubOptions _options;
     private Mock<HttpMessageHandler> _httpMessageHandlerMock;
 
     public GitHubApiClientTests()
@@ -47,11 +47,11 @@ public class GitHubApiClientTests
 
         _httpClient = new HttpClient(_httpMessageHandlerMock.Object);
 
-        _configuration = new Configuration();
-        _configurationMock = new Mock<IOptions<Configuration>>();
-        _configurationMock.Setup(x => x.Value).Returns(_configuration);
+        _options = new GitHubOptions();
+        _optionsMock = new Mock<IOptions<GitHubOptions>>();
+        _optionsMock.Setup(x => x.Value).Returns(_options);
 
-        _sut = new GitHubApiClient(_httpClient, _configurationMock.Object);
+        _sut = new GitHubApiClient(_httpClient, _optionsMock.Object);
     }
 
     [Fact]
@@ -73,7 +73,7 @@ public class GitHubApiClientTests
     public async Task GetRepoFileNamesAsync_AccessTokenIsGiven_ShouldAddAsDefaultHeader()
     {
         //Arrange
-        _configuration.GitHubOptions.AccessToken = "my-access-token";
+        _options.AccessToken = "my-access-token";
 
         HttpRequestMessage requestMessage = null;
 

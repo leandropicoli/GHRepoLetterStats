@@ -10,12 +10,12 @@ namespace GHRepoLetterStats.DataAccess.Clients.Impl;
 public class GitHubApiClient : IGitHubApiClient
 {
     private readonly HttpClient _httpClient;
-    private readonly Configuration _configuration;
+    private readonly GitHubOptions _options;
 
-    public GitHubApiClient(HttpClient httpClient, IOptions<Configuration> options)
+    public GitHubApiClient(HttpClient httpClient, IOptions<GitHubOptions> options)
     {
         _httpClient = httpClient;
-        _configuration = options.Value;
+        _options = options.Value;
     }
 
     public async Task<IEnumerable<string>> GetRepoFilePathAsync()
@@ -46,9 +46,9 @@ public class GitHubApiClient : IGitHubApiClient
         var endpoint = BuildEndpointUrl();
         _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GHRepoLetterStats", "1.0"));
 
-        if (!string.IsNullOrWhiteSpace(_configuration.GitHubOptions.AccessToken))
+        if (!string.IsNullOrWhiteSpace(_options.AccessToken))
         {
-            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", _configuration.GitHubOptions.AccessToken);
+            _httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("token", _options.AccessToken);
         }
 
         var httpResponse = await _httpClient.GetAsync(endpoint);
@@ -69,8 +69,6 @@ public class GitHubApiClient : IGitHubApiClient
 
     private string BuildEndpointUrl()
     {
-        var githubOptions = _configuration.GitHubOptions;
-
-        return $"{githubOptions.GitHubApiUrl}/repos/{githubOptions.RepoOwner}/{githubOptions.RepoName}/git/trees/{githubOptions.DefaultBranch}?recursive=1";
+        return $"{_options.GitHubApiUrl}/repos/{_options.RepoOwner}/{_options.RepoName}/git/trees/{_options.DefaultBranch}?recursive=1";
     }
 }

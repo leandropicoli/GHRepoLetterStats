@@ -8,12 +8,12 @@ namespace GHRepoLetterStats.Business.Services.Impl;
 public class RepoLetterStatsService : IRepoLetterStatsService
 {
     private readonly IGitHubApiClient _gitHubApiClient;
-    private readonly Configuration _config;
+    private readonly GitHubOptions _options;
 
-    public RepoLetterStatsService(IGitHubApiClient gitHubApiClient, IOptions<Configuration> config)
+    public RepoLetterStatsService(IGitHubApiClient gitHubApiClient, IOptions<GitHubOptions> config)
     {
         _gitHubApiClient = gitHubApiClient;
-        _config = config.Value;
+        _options = config.Value;
     }
 
     public async Task<Dictionary<char, int>> GetLetterFrequenciesAsync()
@@ -32,7 +32,7 @@ public class RepoLetterStatsService : IRepoLetterStatsService
             var fileName = Path.GetFileNameWithoutExtension(item);
             fileName = fileName.ToLower();
 
-            foreach (var subtype in _config.SubExtensionsToIgnore)
+            foreach (var subtype in _options.SubExtensionsToIgnore)
             {
                 fileName = fileName.Replace(subtype, "");
             }

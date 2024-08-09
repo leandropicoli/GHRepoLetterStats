@@ -9,15 +9,17 @@ public class RepoLetterStatsServiceTests
 {
     private readonly RepoLetterStatsService _sut;
     private Mock<IGitHubApiClient> _gitHubApiClientMock;
-    private Mock<IOptions<Configuration>> _configurationMock;
+    private Mock<IOptions<GitHubOptions>> _optionsMock;
+    private GitHubOptions _options;
 
     public RepoLetterStatsServiceTests()
     {
         _gitHubApiClientMock = new Mock<IGitHubApiClient>(MockBehavior.Strict);
-        _configurationMock = new Mock<IOptions<Configuration>>(MockBehavior.Strict);
-        _configurationMock.Setup(x => x.Value).Returns(new Configuration());
+        _optionsMock = new Mock<IOptions<GitHubOptions>>(MockBehavior.Strict);
+        _options = new GitHubOptions();
+        _optionsMock.Setup(x => x.Value).Returns(_options);
 
-        _sut = new RepoLetterStatsService(_gitHubApiClientMock.Object, _configurationMock.Object);
+        _sut = new RepoLetterStatsService(_gitHubApiClientMock.Object, _optionsMock.Object);
     }
 
     [Fact]
@@ -114,6 +116,8 @@ public class RepoLetterStatsServiceTests
             "test/abbbccd.js",
             "Services/abbccc.js"
         };
+
+        _options.SubExtensionsToIgnore = [".spec"];
 
         _gitHubApiClientMock
             .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
