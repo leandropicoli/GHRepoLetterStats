@@ -12,4 +12,5 @@ public class GitHubOptions
     public string DefaultBranch { get; set; } = "main";
     public string? AccessToken { get; set; }
     public string[] SubExtensionsToIgnore { get; set; } = [];
+    public string[] FileTypes { get; set; } = [];
 }

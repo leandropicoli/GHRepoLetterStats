@@ -14,6 +14,7 @@ public class RepoLetterStatsServiceTests
     private Mock<IGitHubApiClient> _gitHubApiClientMock;
     private Mock<IOptions<GitHubOptions>> _optionsMock;
     private GitHubOptions _options;
+    private string[] _fileTypes;
 
     public RepoLetterStatsServiceTests()
     {
@@ -21,6 +22,7 @@ public class RepoLetterStatsServiceTests
         _optionsMock = new Mock<IOptions<GitHubOptions>>(MockBehavior.Strict);
         _options = new GitHubOptions();
         _optionsMock.Setup(x => x.Value).Returns(_options);
+        _fileTypes = [];
 
         _sut = new RepoLetterStatsService(_gitHubApiClientMock.Object, _optionsMock.Object);
     }
@@ -39,7 +41,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -70,7 +72,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(expectedOrder, result);
@@ -94,7 +96,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -119,7 +121,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -142,7 +144,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -167,7 +169,7 @@ public class RepoLetterStatsServiceTests
         MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch, _fileTypes);
 
         //Assert
         Assert.Equal(5, result['a']);

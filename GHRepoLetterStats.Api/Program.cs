@@ -29,7 +29,7 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/LetterStats", async (IRepoLetterStatsService service, string? repoOwner, string? repoName, string? defaultBranch) =>
+app.MapGet("/LetterStats", async (IRepoLetterStatsService service, string? repoOwner, string? repoName, string? defaultBranch, string[]? fileTypes) =>
 {
     if (string.IsNullOrEmpty(repoOwner))
         repoOwner = options.RepoOwner;
@@ -40,12 +40,15 @@ app.MapGet("/LetterStats", async (IRepoLetterStatsService service, string? repoO
     if (string.IsNullOrEmpty(defaultBranch))
         defaultBranch = options.DefaultBranch;
 
-    var result = await service.GetLetterFrequenciesAsync(repoOwner, repoName, defaultBranch);
-    return new LetterStatsResponse(repoOwner, repoName, defaultBranch, result);
+    if (fileTypes == null || fileTypes.Length == 0)
+        fileTypes = options.FileTypes;
+
+    var result = await service.GetLetterFrequenciesAsync(repoOwner, repoName, defaultBranch, fileTypes);
+    return new LetterStatsResponse(repoOwner, repoName, defaultBranch, fileTypes, result);
 })
 .WithName("LetterStats")
 .WithOpenApi();
 
 app.Run();
 
-record LetterStatsResponse(string RepoOwner, string RepoName, string Branch, Dictionary<char, int> Results);
+record LetterStatsResponse(string RepoOwner, string RepoName, string Branch, string[] FileTypes, Dictionary<char, int> Results);

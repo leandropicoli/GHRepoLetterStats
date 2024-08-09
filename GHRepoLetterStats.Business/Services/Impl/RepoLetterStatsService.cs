@@ -16,11 +16,9 @@ public class RepoLetterStatsService : IRepoLetterStatsService
         _options = config.Value;
     }
 
-    public async Task<Dictionary<char, int>> GetLetterFrequenciesAsync(string repoOwner, string repoName, string defaultBranch)
+    public async Task<Dictionary<char, int>> GetLetterFrequenciesAsync(string repoOwner, string repoName, string defaultBranch, string[] fileTypes)
     {
-        var extensions = new string[2] { "js", "ts" };
-
-        var result = (await _gitHubApiClient.GetRepoFilesAsync(extensions, repoOwner, repoName, defaultBranch)).ToList();
+        var result = (await _gitHubApiClient.GetRepoFilesAsync(fileTypes, repoOwner, repoName, defaultBranch)).ToList();
 
         var response = new Dictionary<char, int>();
 

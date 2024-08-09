@@ -12,7 +12,9 @@ var serviceProvider = serviceCollection.BuildServiceProvider();
 
 var gitHubInfoSettings = serviceProvider.GetRequiredService<IOptions<GitHubOptions>>().Value;
 
-Console.WriteLine($"Start fetching data from repo {gitHubInfoSettings.RepoOwner}/{gitHubInfoSettings.RepoName} on branch {gitHubInfoSettings.DefaultBranch}, please wait...");
+Console.WriteLine($"Start fetching data from repo {gitHubInfoSettings.RepoOwner}/{gitHubInfoSettings.RepoName} on branch {gitHubInfoSettings.DefaultBranch}");
+Console.WriteLine($"On file types {string.Join(", ", gitHubInfoSettings.FileTypes)}");
+Console.WriteLine("Please wait...");
 Console.WriteLine("");
 
 var result = await FetchItemsAsync();
@@ -25,7 +27,7 @@ async Task<Dictionary<char, int>> FetchItemsAsync()
 {
     var service = serviceProvider.GetRequiredService<IRepoLetterStatsService>();
 
-    return await service.GetLetterFrequenciesAsync(gitHubInfoSettings.RepoOwner, gitHubInfoSettings.RepoName, gitHubInfoSettings.DefaultBranch);
+    return await service.GetLetterFrequenciesAsync(gitHubInfoSettings.RepoOwner, gitHubInfoSettings.RepoName, gitHubInfoSettings.DefaultBranch, gitHubInfoSettings.FileTypes);
 }
 
 void PrintItems(Dictionary<char, int> result)
