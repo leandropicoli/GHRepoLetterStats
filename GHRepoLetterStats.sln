@@ -13,7 +13,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GHRepoLetterStats.DataAcces
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GHRepoLetterStats.Tests", "GHRepoLetterStats.Tests\GHRepoLetterStats.Tests.csproj", "{067E0FBF-8483-4880-98B4-7DD3D71F4DC8}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.Common", "GHRepoLetterStats.Common\GHRepoLetterStats.Common.csproj", "{F9AB9699-A2E7-4D01-97F1-2C5E819499D8}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "GHRepoLetterStats.Common", "GHRepoLetterStats.Common\GHRepoLetterStats.Common.csproj", "{F9AB9699-A2E7-4D01-97F1-2C5E819499D8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "GHRepoLetterStats.Benchmarks", "GHRepoLetterStats.Benchmarks\GHRepoLetterStats.Benchmarks.csproj", "{6D6F37AC-2A41-4588-BF94-E45DE2E05A66}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -45,8 +47,15 @@ Global
 		{F9AB9699-A2E7-4D01-97F1-2C5E819499D8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F9AB9699-A2E7-4D01-97F1-2C5E819499D8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F9AB9699-A2E7-4D01-97F1-2C5E819499D8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6D6F37AC-2A41-4588-BF94-E45DE2E05A66}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6D6F37AC-2A41-4588-BF94-E45DE2E05A66}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6D6F37AC-2A41-4588-BF94-E45DE2E05A66}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6D6F37AC-2A41-4588-BF94-E45DE2E05A66}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {E8362ED5-5583-43B9-9D06-7DB1D9F15EA6}
 	EndGlobalSection
 EndGlobal
