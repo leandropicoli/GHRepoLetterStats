@@ -11,4 +11,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.4.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\GHRepoLetterStats.Business\GHRepoLetterStats.Business.csproj" />
+    <ProjectReference Include="..\GHRepoLetterStats.Common\GHRepoLetterStats.Common.csproj" />
+    <ProjectReference Include="..\GHRepoLetterStats.DataAccess\GHRepoLetterStats.DataAccess.csproj" />
+  </ItemGroup>
+
 </Project>

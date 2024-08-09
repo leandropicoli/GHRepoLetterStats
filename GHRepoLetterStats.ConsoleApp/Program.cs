@@ -11,7 +11,6 @@ ConfigureServices(serviceCollection);
 var serviceProvider = serviceCollection.BuildServiceProvider();
 
 var gitHubInfoSettings = serviceProvider.GetRequiredService<IOptions<GitHubOptions>>().Value;
-var test = ConfigurationManager.GetSection<GitHubOptions>("GitHubOptions");
 
 Console.WriteLine($"Start fetching data from repo {gitHubInfoSettings.RepoOwner}/{gitHubInfoSettings.RepoName} on branch {gitHubInfoSettings.DefaultBranch}, please wait...");
 Console.WriteLine("");
@@ -26,7 +25,7 @@ async Task<Dictionary<char, int>> FetchItemsAsync()
 {
     var service = serviceProvider.GetRequiredService<IRepoLetterStatsService>();
 
-    return await service.GetLetterFrequenciesAsync();
+    return await service.GetLetterFrequenciesAsync(gitHubInfoSettings.RepoOwner, gitHubInfoSettings.RepoName, gitHubInfoSettings.DefaultBranch);
 }
 
 void PrintItems(Dictionary<char, int> result)

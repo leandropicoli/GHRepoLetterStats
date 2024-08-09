@@ -1,11 +1,23 @@
+using GHRepoLetterStats.Business.Services.Impl;
+using GHRepoLetterStats.Business.Services.Interfaces;
+using GHRepoLetterStats.Common.Configuration;
+using GHRepoLetterStats.DataAccess.Clients.Impl;
+using GHRepoLetterStats.DataAccess.Clients.Interfaces;
+using Microsoft.Extensions.Options;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+builder.Services.AddHttpClient();
+builder.Services.Configure<GitHubOptions>(builder.Configuration.GetSection("GitHubOptions"));
+builder.Services.AddScoped<IGitHubApiClient, GitHubApiClient>();
+builder.Services.AddScoped<IRepoLetterStatsService, RepoLetterStatsService>();
 
 var app = builder.Build();
+
+var options = app.Services.GetRequiredService<IOptions<GitHubOptions>>().Value;
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -16,29 +28,24 @@ if (app.Environment.IsDevelopment())
 
 app.UseHttpsRedirection();
 
-var summaries = new[]
-{
-    "Freezing", "Bracing", "Chilly", "Cool", "Mild", "Warm", "Balmy", "Hot", "Sweltering", "Scorching"
-};
 
-app.MapGet("/weatherforecast", () =>
+app.MapGet("/LetterStats", async (IRepoLetterStatsService service, string? repoOwner, string? repoName, string? defaultBranch) =>
 {
-    var forecast =  Enumerable.Range(1, 5).Select(index =>
-        new WeatherForecast
-        (
-            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
-            Random.Shared.Next(-20, 55),
-            summaries[Random.Shared.Next(summaries.Length)]
-        ))
-        .ToArray();
-    return forecast;
+    if (string.IsNullOrEmpty(repoOwner))
+        repoOwner = options.RepoOwner;
+
+    if (string.IsNullOrEmpty(repoName))
+        repoName = options.RepoName;
+
+    if (string.IsNullOrEmpty(defaultBranch))
+        defaultBranch = options.DefaultBranch;
+
+    var result = await service.GetLetterFrequenciesAsync(repoOwner, repoName, defaultBranch);
+    return new LetterStatsResponse(repoOwner, repoName, defaultBranch, result);
 })
-.WithName("GetWeatherForecast")
+.WithName("LetterStats")
 .WithOpenApi();
 
 app.Run();
 
-record WeatherForecast(DateOnly Date, int TemperatureC, string? Summary)
-{
-    public int TemperatureF => 32 + (int)(TemperatureC / 0.5556);
-}
+record LetterStatsResponse(string RepoOwner, string RepoName, string Branch, Dictionary<char, int> Results);

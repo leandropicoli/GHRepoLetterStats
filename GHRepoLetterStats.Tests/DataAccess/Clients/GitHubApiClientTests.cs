@@ -11,6 +11,10 @@ public class GitHubApiClientTests
 {
     private readonly GitHubApiClient _sut;
     private readonly HttpClient _httpClient;
+    private const string _repoOwner = "foo";
+    private const string _repoName = "bar";
+    private const string _defaultBranch = "main";
+    private string[] _extensions;
     private Mock<IOptions<GitHubOptions>> _optionsMock;
     private GitHubOptions _options;
     private Mock<HttpMessageHandler> _httpMessageHandlerMock;
@@ -51,26 +55,13 @@ public class GitHubApiClientTests
         _optionsMock = new Mock<IOptions<GitHubOptions>>();
         _optionsMock.Setup(x => x.Value).Returns(_options);
 
+        _extensions = ["js", "ts"];
+
         _sut = new GitHubApiClient(_httpClient, _optionsMock.Object);
     }
 
     [Fact]
-    public async Task GetRepoFileNamesAsync_ReturnAListOfFileNamesAsync()
-    {
-        //Arrange
-        //Act
-        var result = await _sut.GetRepoFilePathAsync();
-
-        //Assert
-        Assert.Equal(4, result.Count());
-        Assert.Contains("file.js", result);
-        Assert.Contains("file.ts", result);
-        Assert.Contains("file.config", result);
-        Assert.Contains("readme.md", result);
-    }
-
-    [Fact]
-    public async Task GetRepoFileNamesAsync_AccessTokenIsGiven_ShouldAddAsDefaultHeader()
+    public async Task GetRepoFilesAsync_AccessTokenIsGiven_ShouldAddAsDefaultHeader()
     {
         //Arrange
         _options.AccessToken = "my-access-token";
@@ -105,39 +96,26 @@ public class GitHubApiClientTests
             .ReturnsAsync(mockHttpResponseMessage);
 
         //Act
-        _ = await _sut.GetRepoFilePathAsync();
+        _ = await _sut.GetRepoFilesAsync(_extensions, _repoOwner, _repoOwner, _defaultBranch);
 
         //Assert
         var headers = requestMessage!.Headers;
         Assert.Equal("my-access-token", headers.Authorization!.Parameter);
     }
 
-    [Fact]
-    public async Task GetRepoJavascriptAndTypescriptFilePathAsync_OnlyReturnJavascriptAndTypeScriptFiles()
-    {
-        //Arrange
-        //Act
-        var result = await _sut.GetRepoJavascriptAndTypescriptFilePathAsync();
-
-        //Assert
-        Assert.Equal(2, result.Count());
-        Assert.Contains("file.js", result);
-        Assert.Contains("file.ts", result);
-    }
-
     [Theory]
-    [MemberData(nameof(GetRepoFileNamesByExtensionAsyncTestData))]
-    public async Task GetRepoFileNamesByExtensionAsync_ListOfExtensionsIsGiven_ReturnsOnlyFilesWithThatExtension(string[] given, string[] expected)
+    [MemberData(nameof(GetRepoFilesAsyncTestData))]
+    public async Task GetRepoFilesAsync_ListOfExtensionsIsGiven_ReturnsOnlyFilesWithThatExtension(string[] given, string[] expected)
     {
         //Arrange
         //Act
-        var result = await _sut.GetRepoFilePathByExtensionAsync(given);
+        var result = await _sut.GetRepoFilesAsync(given, _repoOwner, _repoOwner, _defaultBranch);
 
         //Assert
         Assert.Equal(expected, result);
     }
 
-    public static IEnumerable<object[]> GetRepoFileNamesByExtensionAsyncTestData
+    public static IEnumerable<object[]> GetRepoFilesAsyncTestData
     {
         get
         {

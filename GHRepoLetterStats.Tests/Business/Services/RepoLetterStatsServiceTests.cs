@@ -8,6 +8,9 @@ namespace GHRepoLetterStats.Tests.Business.Services;
 public class RepoLetterStatsServiceTests
 {
     private readonly RepoLetterStatsService _sut;
+    private const string _repoOwner = "foo";
+    private const string _repoName = "bar";
+    private const string _defaultBranch = "main";
     private Mock<IGitHubApiClient> _gitHubApiClientMock;
     private Mock<IOptions<GitHubOptions>> _optionsMock;
     private GitHubOptions _options;
@@ -33,12 +36,10 @@ public class RepoLetterStatsServiceTests
             "abbccc"
         };
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -66,12 +67,10 @@ public class RepoLetterStatsServiceTests
             { 'd', 1 }
         };
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(expectedOrder, result);
@@ -92,12 +91,10 @@ public class RepoLetterStatsServiceTests
             "Services/abbccc.js"
         };
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -119,12 +116,10 @@ public class RepoLetterStatsServiceTests
 
         _options.SubExtensionsToIgnore = [".spec"];
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -144,12 +139,10 @@ public class RepoLetterStatsServiceTests
             "ab_bccc"
         };
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -171,12 +164,10 @@ public class RepoLetterStatsServiceTests
             "abbCcc"
         };
 
-        _gitHubApiClientMock
-            .Setup(x => x.GetRepoFilePathByExtensionAsync(It.IsAny<string[]>()))
-            .ReturnsAsync(clientResponse);
+        MockApiClientResponse(clientResponse);
 
         //Act
-        var result = await _sut.GetLetterFrequenciesAsync();
+        var result = await _sut.GetLetterFrequenciesAsync(_repoOwner, _repoName, _defaultBranch);
 
         //Assert
         Assert.Equal(5, result['a']);
@@ -184,4 +175,13 @@ public class RepoLetterStatsServiceTests
         Assert.Equal(7, result['c']);
         Assert.Equal(1, result['d']);
     }
+
+    #region Helpers
+    private void MockApiClientResponse(List<string> response)
+    {
+        _gitHubApiClientMock
+            .Setup(x => x.GetRepoFilesAsync(It.IsAny<string[]>(), It.IsAny<string>(), It.IsAny<string>(), It.IsAny<string>()))
+            .ReturnsAsync(response);
+    }
+    #endregion
 }

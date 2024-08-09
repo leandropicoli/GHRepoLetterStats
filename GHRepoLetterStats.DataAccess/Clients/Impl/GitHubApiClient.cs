@@ -18,32 +18,17 @@ public class GitHubApiClient : IGitHubApiClient
         _options = options.Value;
     }
 
-    public async Task<IEnumerable<string>> GetRepoFilePathAsync()
-    {
-        var response = await GetResponseFromEndpointAsync();
-
-        return response.Tree.Select(x => x.Path);
-    }
-
-    public async Task<IEnumerable<string>> GetRepoJavascriptAndTypescriptFilePathAsync()
-    {
-        var response = await GetResponseFromEndpointAsync();
-
-        return response.Tree.Where(x => x.Path.EndsWith("js") || x.Path.EndsWith("ts")).Select(x => x.Path);
-    }
-
-    public async Task<IEnumerable<string>> GetRepoFilePathByExtensionAsync(string[] extensions)
+    public async Task<IEnumerable<string>> GetRepoFilesAsync(string[] extensions, string repoOwner, string repoName, string defaultBranch)
     {
         extensions = extensions.Select(x => x.Replace(".", "")).ToArray();
-
-        var response = await GetResponseFromEndpointAsync();
+        var endpoint = BuildEndpointUrl(repoOwner, repoName, defaultBranch);
+        var response = await GetResponseFromEndpointAsync(endpoint);
 
         return response.Tree.Where(x => x.Path.EndsWith(extensions)).Select(x => x.Path);
     }
 
-    private async Task<GitRepoResponse> GetResponseFromEndpointAsync()
+    private async Task<GitRepoResponse> GetResponseFromEndpointAsync(string endpoint)
     {
-        var endpoint = BuildEndpointUrl();
         _httpClient.DefaultRequestHeaders.UserAgent.Add(new ProductInfoHeaderValue("GHRepoLetterStats", "1.0"));
 
         if (!string.IsNullOrWhiteSpace(_options.AccessToken))
@@ -67,8 +52,8 @@ public class GitHubApiClient : IGitHubApiClient
         return result;
     }
 
-    private string BuildEndpointUrl()
+    private string BuildEndpointUrl(string repoOwner, string repoName, string defaultBranch)
     {
-        return $"{_options.GitHubApiUrl}/repos/{_options.RepoOwner}/{_options.RepoName}/git/trees/{_options.DefaultBranch}?recursive=1";
+        return $"{_options.GitHubApiUrl}/repos/{repoOwner}/{repoName}/git/trees/{defaultBranch}?recursive=1";
     }
 }
