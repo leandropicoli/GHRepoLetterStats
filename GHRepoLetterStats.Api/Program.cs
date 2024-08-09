@@ -29,24 +29,27 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 
-app.MapGet("/LetterStats", async (IRepoLetterStatsService service, string? repoOwner, string? repoName, string? defaultBranch, string[]? fileTypes) =>
+app.MapGet("/LetterStats", async (IRepoLetterStatsService service) =>
 {
-    if (string.IsNullOrEmpty(repoOwner))
-        repoOwner = options.RepoOwner;
-
-    if (string.IsNullOrEmpty(repoName))
-        repoName = options.RepoName;
-
-    if (string.IsNullOrEmpty(defaultBranch))
-        defaultBranch = options.DefaultBranch;
-
-    if (fileTypes == null || fileTypes.Length == 0)
-        fileTypes = options.FileTypes;
+    var repoOwner = options.RepoOwner;
+    var repoName = options.RepoName;
+    var defaultBranch = options.DefaultBranch;
+    var fileTypes = options.FileTypes;
 
     var result = await service.GetLetterFrequenciesAsync(repoOwner, repoName, defaultBranch, fileTypes);
     return new LetterStatsResponse(repoOwner, repoName, defaultBranch, fileTypes, result);
 })
 .WithName("LetterStats")
+.WithDescription("Letter Stats to search for the Repository and the FileTypes configured on project settings.")
+.WithOpenApi();
+
+app.MapGet("/CustomLetterStats", async (IRepoLetterStatsService service, string repoOwner, string repoName, string defaultBranch, string[] fileTypes) =>
+{
+    var result = await service.GetLetterFrequenciesAsync(repoOwner, repoName, defaultBranch, fileTypes);
+    return new LetterStatsResponse(repoOwner, repoName, defaultBranch, fileTypes, result);
+})
+.WithName("CustomLetterStats")
+.WithDescription("Custom Letter Stats to search for a specific Repository and the FileTypes.")
 .WithOpenApi();
 
 app.Run();
