@@ -22,13 +22,12 @@ public class RepoLetterStatsService : IRepoLetterStatsService
 
         var response = new Dictionary<char, int>();
 
-        if (result.Count == 0) 
+        if (result.Count == 0)
             return response;
 
         foreach (var item in result)
         {
-            var fileName = Path.GetFileNameWithoutExtension(item);
-            fileName = fileName.ToLower();
+            var fileName = Path.GetFileNameWithoutExtension(item).ToLower();
 
             foreach (var subtype in _options.SubExtensionsToIgnore)
             {
@@ -50,6 +49,6 @@ public class RepoLetterStatsService : IRepoLetterStatsService
             }
         }
 
-        return response.OrderByDescending(x => x.Value).ToDictionary();
+        return response.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
     }
 }
