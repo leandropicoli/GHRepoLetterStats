@@ -8,12 +8,7 @@ using Microsoft.Extensions.Options;
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
-builder.Services.AddHttpClient();
-builder.Services.Configure<GitHubOptions>(builder.Configuration.GetSection("GitHubOptions"));
-builder.Services.AddScoped<IGitHubApiClient, GitHubApiClient>();
-builder.Services.AddScoped<IRepoLetterStatsService, RepoLetterStatsService>();
+ConfigureServices();
 
 var app = builder.Build();
 
@@ -53,5 +48,18 @@ app.MapGet("/CustomLetterStats", async (IRepoLetterStatsService service, string 
 .WithOpenApi();
 
 app.Run();
+
+void ConfigureServices()
+{
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+    builder.Services.AddHttpClient();
+    builder.Services.AddScoped<IGitHubApiClient, GitHubApiClient>();
+    builder.Services.AddScoped<IRepoLetterStatsService, RepoLetterStatsService>();
+
+    //Configuration
+    builder.Services.Configure<GitHubOptions>(builder.Configuration.GetSection("GitHubOptions"));
+    builder.Configuration.AddEnvironmentVariables();
+}
 
 record LetterStatsResponse(string RepoOwner, string RepoName, string Branch, string[] FileTypes, Dictionary<char, int> Results);
