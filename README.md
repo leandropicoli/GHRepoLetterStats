@@ -45,7 +45,16 @@
 - **RepoName**: The name of the GitHub repository.
 - **DefaultBranch**: The branch to fetch files from.
 - **FileTypes**: An array of file extensions to include in the letter frequency analysis.
-- **AccessToken (optional)**: To avoid GitHub api rate limiting.
+- **AccessToken (optional)**: To avoid GitHub api rate limiting. Add it to the env vars
+  - **Windows**
+  ```bash
+  setx GitHubOptions__AccessToken "your_github_token"
+  ```
+
+  - **Linux/macOS**
+  ```bash
+  export GitHubOptions__AccessToken "your_github_token"
+  ```
 - **SubExtensionsToIgnore**: Array of *SubExtensions* to ignore on counting, like *spec* files.
 
 ## API Documentation
