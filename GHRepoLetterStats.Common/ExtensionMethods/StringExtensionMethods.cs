@@ -18,4 +18,10 @@ public static class StringExtensionMethods
     {
         return Regex.Replace(value, "[^a-zA-Z]", "");
     }
+
+    public static string RemoveSpecialCharacters(this string value, string[] stringsToRemove)
+    {
+        var pattern = $"[^a-zA-Z{string.Join("", stringsToRemove)}]";
+        return Regex.Replace(value, pattern, "");
+    }
 }

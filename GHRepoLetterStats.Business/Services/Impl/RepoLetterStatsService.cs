@@ -54,6 +54,37 @@ public class RepoLetterStatsService : IRepoLetterStatsService
         return response.OrderByDescending(x => x.Value).ToDictionary(x => x.Key, x => x.Value);
     }
 
+    public async Task<Dictionary<char, int>> GetLetterFrequenciesRegexRemovingAllAsync(string repoOwner, string repoName, string defaultBranch, string[] fileTypes)
+    {
+        var result = (await _gitHubApiClient.GetRepoFilesAsync(fileTypes, repoOwner, repoName, defaultBranch)).ToList();
+
+        var response = new Dictionary<char, int>();
+
+        if (result.Count == 0)
+            return response;
+
+        foreach (var item in result)
+        {
+            var fileName = Path.GetFileNameWithoutExtension(item).ToLower();
+
+            fileName = fileName.RemoveSpecialCharacters(_options.SubExtensionsToIgnore);
+
+            foreach (var letter in fileName)
+            {
+                if (response.ContainsKey(letter))
+                {
+                    response[letter] += 1;
+                }
+                else
+                {
+                    response[letter] = 1;
+                }
+            }
+        }
+
+        return response;
+    }
+
     public async Task<Dictionary<char, int>> GetLetterFrequenciesWithStringBuilderAsync(string repoOwner, string repoName, string defaultBranch, string[] fileTypes)
     {
         var result = (await _gitHubApiClient.GetRepoFilesAsync(fileTypes, repoOwner, repoName, defaultBranch)).ToList();
