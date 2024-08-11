@@ -45,7 +45,16 @@
 - **RepoName**: The name of the GitHub repository.
 - **DefaultBranch**: The branch to fetch files from.
 - **FileTypes**: An array of file extensions to include in the letter frequency analysis.
-- **AccessToken (optional)**: To avoid GitHub api rate limiting.
+- **AccessToken (optional)**: To avoid GitHub api rate limiting. Add it to the env vars
+  - **Windows**
+  ```bash
+  setx GitHubOptions__AccessToken "your_github_token"
+  ```
+
+  - **Linux/macOS**
+  ```bash
+  export GitHubOptions__AccessToken "your_github_token"
+  ```
 - **SubExtensionsToIgnore**: Array of *SubExtensions* to ignore on counting, like *spec* files.
 
 ## API Documentation
@@ -80,7 +89,6 @@ dotnet run
   "results": {
     "e": 787,
     "t": 574
-    ...
     // more letters and their counts
   }
 }
@@ -155,3 +163,10 @@ t - 574
 ```
 dotnet test
 ```
+
+## Benchmarks
+
+There are another implementations of **RepoLetterStatsService** on branch [benchmarks](https://github.com/leandropicoli/GHRepoLetterStats/blob/benchmarks/GHRepoLetterStats.Business/Services/Impl/RepoLetterStatsService.cs)
+
+Below are the results
+![Benchmark](/benchmark.png)

@@ -3,11 +3,15 @@ using GHRepoLetterStats.Business.Services.Interfaces;
 using GHRepoLetterStats.Common.Configuration;
 using GHRepoLetterStats.DataAccess.Clients.Impl;
 using GHRepoLetterStats.DataAccess.Clients.Interfaces;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Options;
 
 var serviceCollection = new ServiceCollection();
-ConfigureServices(serviceCollection);
+var configurationManager = new ConfigurationManager();
+configurationManager.AddJsonFile("appsettings.json", optional: false, reloadOnChange: true);
+configurationManager.AddEnvironmentVariables();
+ConfigureServices(serviceCollection, configurationManager);
 var serviceProvider = serviceCollection.BuildServiceProvider();
 
 var gitHubInfoSettings = serviceProvider.GetRequiredService<IOptions<GitHubOptions>>().Value;
@@ -32,18 +36,24 @@ async Task<Dictionary<char, int>> FetchItemsAsync()
 
 void PrintItems(Dictionary<char, int> result)
 {
+    if (result.Count == 0)
+    {
+        Console.WriteLine("No files are found for the given repo");
+        return;
+    }
+
     foreach (var item in result)
     {
         Console.WriteLine($"{item.Key} - {item.Value}");
     }
 }
 
-void ConfigureServices(ServiceCollection serviceCollection)
+void ConfigureServices(ServiceCollection serviceCollection, ConfigurationManager configurationManager)
 {
     serviceCollection.AddHttpClient();
     serviceCollection.AddScoped<IGitHubApiClient, GitHubApiClient>();
     serviceCollection.AddScoped<IRepoLetterStatsService, RepoLetterStatsService>();
-    serviceCollection.Configure<GitHubOptions>(ConfigurationManager.GetSection("GitHubOptions"));
+    serviceCollection.Configure<GitHubOptions>(configurationManager.GetSection("GitHubOptions"));
 }
 
 #endregion
